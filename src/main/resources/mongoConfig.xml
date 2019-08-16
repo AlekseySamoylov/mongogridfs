@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/data/mongo
+       http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+    <!--<context:annotation-config />-->
+
+    <!--  Solva file upload config  -->
+<!--    <mongo:mongo-client id="mongoClient" host="localhost" port="47017" credentials="*******" />-->
+<!--    <mongo:db-factory id="mongoDbFactory" dbname="ru-solva-offer-storage" mongo-ref="mongoClient" />-->
+
+    <!--  Moneyman file download config  -->
+    <mongo:mongo-client id="mongoClient" host="localhost" port="32701" />
+    <mongo:db-factory id="mongoDbFactory" dbname="external-integrations" mongo-ref="mongoClient" />
+
+    <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+        <constructor-arg ref="mongoDbFactory" />
+        <constructor-arg ref="mongoConverter" />
+    </bean>
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongoDbFactory" />
+        <constructor-arg ref="mongoConverter" />
+    </bean>
+
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+    <mongo:mapping-converter id="mongoConverter" base-package="com.alekseysamoylov.converter">
+        <mongo:custom-converters base-package="com.alekseysamoylov.converter" />
+    </mongo:mapping-converter>
+
+</beans>
